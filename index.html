@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#fff1f6">
-  <title>My Manga Collection ♡</title>
+  <meta name="theme-color" content="#b8ebff">
+  <title>My BL Collection ♡</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -12,7 +12,7 @@
     <header class="topbar">
       <a class="brand" href="#" aria-label="My Manga Collection home">
         <span class="brand-icon">♡</span>
-        <span><strong>My Manga Collection</strong><small>Books · Comics · Merch · More</small></span>
+        <span><strong>My BL Collection</strong><small>Books · Comics · More</small></span>
       </a>
       <div class="top-actions">
         <label class="search-wrap"><span>⌕</span><input id="globalSearch" type="search" placeholder="搜尋作品、作者、平台…"></label>
@@ -32,13 +32,13 @@
         <button class="nav-item" id="exportNav"><span>⇧</span><b data-i18n="export">匯出 JSON</b></button>
         <button class="nav-item" id="importNav"><span>⇩</span><b data-i18n="import">匯入 JSON</b></button>
         <input id="importFile" type="file" accept=".json,application/json" hidden>
-        <div class="sidebar-note"><span>✿</span><p data-i18n="sidebarNote">一點一滴，收藏喜歡的故事。</p><div class="kitty">ฅ^•ﻌ•^ฅ</div></div>
+        <div class="sidebar-note"><span>✿</span><p data-i18n="sidebarNote">快來看看又給男同孝了多少錢吧！</p><div class="kitty">ฅ^•ﻌ•^ฅ</div></div>
       </aside>
 
       <main class="main-content">
         <section class="welcome-card">
           <div class="welcome-copy">
-            <p class="eyebrow" data-i18n="yourLibrary">YOUR LITTLE LIBRARY</p>
+            <p class="eyebrow" data-i18n="yourLibrary">YOUR LIBRARY</p>
             <h1><span data-i18n="hello">歡迎回來！</span> <span data-i18n="youHave">你有</span> <em id="totalCount">0</em> <span data-i18n="items">件收藏</span></h1>
             <p data-i18n="welcomeLine">No Gays No Life ♡</p>
           </div>
@@ -78,7 +78,7 @@
         </section>
 
         <section id="collectionGrid" class="collection-grid" aria-live="polite"></section>
-        <section id="emptyState" class="empty-state" hidden><div class="empty-illustration">♡</div><h2 data-i18n="emptyTitle">這裡還空空的</h2><p data-i18n="emptyText">新增第一件收藏，開始打造你的漫畫小宇宙吧！</p><button class="primary-btn" id="emptyAdd" data-i18n="addFirst">＋ 新增第一件收藏</button></section>
+        <section id="emptyState" class="empty-state" hidden><div class="empty-illustration">♡</div><h2 data-i18n="emptyTitle">這裡還空空的</h2><p data-i18n="emptyText">新增第一件收藏，壯大男同宇宙吧！</p><button class="primary-btn" id="emptyAdd" data-i18n="addFirst">＋ 新增第一件收藏</button></section>
         <footer class="main-footer"><span>Made with ♡ for your little library</span><span id="footerCount">0 items</span></footer>
       </main>
     </div>
