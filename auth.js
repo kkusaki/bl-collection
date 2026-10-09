@@ -3,6 +3,7 @@
   "use strict";
 
   const client = window.supabaseClient;
+
   const authDialog = document.getElementById("authDialog");
   const authForm = document.getElementById("authForm");
   const authButton = document.getElementById("authButton");
@@ -22,20 +23,33 @@
 
   function showAuthDialog() {
     authError.textContent = "";
-    authDialog.showModal();
+
+    if (!authDialog.open) {
+      authDialog.showModal();
+    }
+  }
+
+  function closeAuthDialog() {
+    if (authDialog.open) {
+      authDialog.close();
+    }
   }
 
   function setMode(registering) {
     isRegistering = registering;
+
     authTitle.textContent = registering
       ? "註冊帳號"
       : "登入帳號";
+
     authSubmit.textContent = registering
       ? "註冊 ♡"
       : "登入 ♡";
+
     authSwitch.textContent = registering
       ? "已經有帳號？點此登入"
       : "還沒有帳號？點此註冊";
+
     authError.textContent = "";
   }
 
@@ -50,8 +64,11 @@
 
       currentUser = null;
       updateButton();
+      closeAuthDialog();
+
       window.location.reload();
     } else {
+      setMode(false);
       showAuthDialog();
     }
   });
@@ -64,8 +81,13 @@
   authForm.addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    const email = document.getElementById("authEmail").value.trim();
-    const password = document.getElementById("authPassword").value;
+    const email = document
+      .getElementById("authEmail")
+      .value.trim();
+
+    const password = document
+      .getElementById("authPassword")
+      .value;
 
     authError.textContent = "";
     authSubmit.disabled = true;
@@ -76,12 +98,15 @@
           email,
           password,
           options: {
-            emailRedirectTo: window.location.origin +
+            emailRedirectTo:
+              window.location.origin +
               window.location.pathname
           }
         });
 
-        if (error) throw error;
+        if (error) {
+          throw error;
+        }
 
         if (!data.session) {
           authError.textContent =
@@ -95,10 +120,12 @@
             password
           });
 
-        if (error) throw error;
+        if (error) {
+          throw error;
+        }
       }
 
-      authDialog.close();
+      closeAuthDialog();
     } catch (error) {
       authError.textContent = error.message;
     } finally {
@@ -108,10 +135,11 @@
 
   client.auth.onAuthStateChange((event, session) => {
     currentUser = session?.user || null;
+
     updateButton();
 
-    if (currentUser && authDialog.open) {
-      authDialog.close();
+    if (currentUser) {
+      closeAuthDialog();
     }
   });
 
@@ -124,10 +152,6 @@
 
     currentUser = data?.user || null;
     updateButton();
-
-    if (!currentUser) {
-      showAuthDialog();
-    }
   }
 
   initializeAuth();
