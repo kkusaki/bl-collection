@@ -40,7 +40,7 @@
           <div class="welcome-copy">
             <p class="eyebrow" data-i18n="yourLibrary">YOUR LITTLE LIBRARY</p>
             <h1><span data-i18n="hello">歡迎回來！</span> <span data-i18n="youHave">你有</span> <em id="totalCount">0</em> <span data-i18n="items">件收藏</span></h1>
-            <p data-i18n="welcomeLine">把喜歡的作品好好收藏，讓每一份心動都有跡可循 ♡</p>
+            <p data-i18n="welcomeLine">No Gays No Life ♡</p>
           </div>
           <div class="welcome-art" aria-hidden="true"><span class="sparkle">✦</span><span class="book-stack">▱<br>▱<br>▱</span><span class="art-heart">♡</span></div>
         </section>
@@ -48,9 +48,7 @@
         <section class="stats-grid" aria-label="Collection statistics">
           <article class="stat-card"><span class="stat-icon pink">▤</span><div><small data-i18n="physicalManga">日漫實體書</small><strong id="stat-jp">0</strong></div></article>
           <article class="stat-card"><span class="stat-icon lilac">▥</span><div><small data-i18n="koreanManga">韓漫實體書</small><strong id="stat-kr">0</strong></div></article>
-          <article class="stat-card"><span class="stat-icon peach">✿</span><div><small data-i18n="merch">漫畫周邊</small><strong id="stat-merch">0</strong></div></article>
           <article class="stat-card"><span class="stat-icon blue">▣</span><div><small data-i18n="digital">電子漫畫</small><strong id="stat-digital">0</strong></div></article>
-          <article class="stat-card"><span class="stat-icon rose">♡</span><div><small data-i18n="bonus">特典／小卡</small><strong id="stat-bonus">0</strong></div></article>
         </section>
 
         <section class="toolbar">
@@ -58,9 +56,7 @@
             <button class="category-tab selected" data-category="all" data-i18n="all">全部</button>
             <button class="category-tab" data-category="jp" data-i18n="physicalManga">日漫實體書</button>
             <button class="category-tab" data-category="kr" data-i18n="koreanManga">韓漫實體書</button>
-            <button class="category-tab" data-category="merch" data-i18n="merch">漫畫周邊</button>
             <button class="category-tab" data-category="digital" data-i18n="digital">電子漫畫</button>
-            <button class="category-tab" data-category="bonus" data-i18n="bonusFull">特典／小卡／收藏卡</button>
           </div>
           <button class="primary-btn" id="addButton"><span>＋</span> <span data-i18n="addItem">新增作品</span></button>
         </section>
@@ -94,7 +90,7 @@
       <input type="hidden" id="itemId">
       <div class="form-grid">
         <label class="field full"><span data-i18n="titleLabel">作品名稱 *</span><input id="itemTitle" required maxlength="120" placeholder="例如：作品名稱"></label>
-        <label class="field"><span data-i18n="categoryLabel">收藏分類 *</span><select id="itemCategory" required><option value="jp">日漫實體書</option><option value="kr">韓漫實體書</option><option value="merch">漫畫周邊</option><option value="digital">電子漫畫</option><option value="bonus">特典／小卡／收藏卡</option></select></label>
+        <label class="field"><span data-i18n="categoryLabel">收藏分類 *</span><select id="itemCategory" required><option value="jp">日漫實體書</option><option value="kr">韓漫實體書</option><option value="digital">電子漫畫</option>
         <label class="field"><span data-i18n="authorLabel">作者</span><input id="itemAuthor" maxlength="120" placeholder="作者／創作者"></label>
         <label class="field"><span data-i18n="priceLabel">購買價格</span><div class="price-input"><input id="itemPrice" type="number" min="0" step="0.01" placeholder="0.00"><select id="itemCurrency" aria-label="Currency"><option>USD</option><option>TWD</option><option>KRW</option><option>JPY</option><option>CNY</option><option>HKD</option></select></div></label>
         <label class="field"><span data-i18n="quantityLabel">冊數／數量</span><input id="itemQuantity" type="number" min="1" step="1" value="1"></label>
