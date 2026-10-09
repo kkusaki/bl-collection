@@ -15,6 +15,9 @@
         <span><strong>My BL Collection</strong><small>Books · Comics · More</small></span>
       </a>
       <div class="top-actions">
+        <button id="authButton" class="soft-btn" type="button">
+  登入 / 註冊 ♡
+</button>
         <label class="search-wrap"><span>⌕</span><input id="globalSearch" type="search" placeholder="搜尋作品、作者、平台…"></label>
         <button id="langToggle" class="soft-btn" type="button">繁中 / EN</button>
         <button id="themeToggle" class="round-btn" type="button" aria-label="Toggle color theme">☼</button>
@@ -109,6 +112,48 @@
     <div class="modal-actions"><button class="soft-btn" id="keepItem" data-i18n="cancel">取消</button><button class="danger-btn" id="confirmDelete" data-i18n="delete">刪除</button></div>
   </dialog>
   
+<!-- Login / Register -->
+<dialog id="authDialog" class="modal">
+  <div class="modal-heading">
+    <div>
+      <p class="eyebrow">MY LITTLE LIBRARY ♡</p>
+      <h2 id="authTitle">登入帳號</h2>
+    </div>
+  </div>
+
+  <form id="authForm">
+    <div class="form-grid">
+      <label class="field full">
+        <span>電子郵件 Email</span>
+        <input id="authEmail" type="email"
+               autocomplete="email" required>
+      </label>
+
+      <label class="field full">
+        <span>密碼 Password</span>
+        <input id="authPassword" type="password"
+               minlength="6" required>
+      </label>
+    </div>
+
+    <p id="authError" class="form-error"
+       role="alert"></p>
+
+    <div class="modal-actions">
+      <button type="submit"
+              class="primary-btn"
+              id="authSubmit">
+        登入 ♡
+      </button>
+    </div>
+
+    <p style="text-align:center;margin-top:16px;">
+      <a href="#" id="authSwitch">
+        還沒有帳號？點此註冊
+      </a>
+    </p>
+  </form>
+</dialog>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <!-- Supabase JavaScript SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
