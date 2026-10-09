@@ -1,6 +1,7 @@
 (() => {
   "use strict";
-  const STORAGE_KEY = "myMangaCollection.v1";
+  const client = window.supabaseClient;
+  if (!client) throw new Error("Supabase client is missing. Check script loading order.");
   const categories = {
     jp: { zh: "日漫實體書", en: "Japanese print manga" },
     kr: { zh: "韓漫實體書", en: "Korean print manhwa" },
@@ -34,18 +35,16 @@
     tabs:$("categoryTabs"), dialog:$("itemDialog"), form:$("itemForm"), confirm:$("confirmDialog"), toast:$("toast"),
     importFile:$("importFile")
   };
-  let items = loadItems();
+  let items = [];
+  let currentUserId = null;
+  let cloudReady = false;
+  let busy = false;
+  let loadGeneration = 0;
   let currentCategory = "all";
   let language = "zh";
   let deleteTarget = null;
   let toastTimer = null;
 
-  function loadItems() {
-    try {
-      const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-      return Array.isArray(parsed) ? parsed.filter(isValidItem).map(normalizeItem) : [];
-    } catch (_) { return []; }
-  }
   function isValidItem(x) { return x && typeof x === "object" && typeof x.title === "string" && typeof x.id === "string"; }
   function normalizeItem(x) {
     return {
@@ -57,11 +56,77 @@
       notes: String(x.notes || ""), createdAt: Number(x.createdAt) || Date.now(), updatedAt: Number(x.updatedAt) || Date.now()
     };
   }
-  function makeId() { return (crypto && crypto.randomUUID) ? crypto.randomUUID() : "item-" + Date.now() + "-" + Math.random().toString(36).slice(2,9); }
-  function saveItems() {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(items)); return true; }
-    catch (_) { showToast(language === "zh" ? "儲存失敗：瀏覽器空間可能已滿，請移除大型封面圖片。" : "Save failed: browser storage may be full. Try removing large cover images."); return false; }
+  function makeId() { return crypto.randomUUID(); }
+  function fromRow(row) {
+    return normalizeItem({
+      id: row.id, title: row.title, category: row.category, author: row.author,
+      price: row.price, currency: row.currency, quantity: row.quantity,
+      platform: row.store, status: row.arrival_status, cover: row.cover_url,
+      notes: row.notes, createdAt: Date.parse(row.created_at), updatedAt: Date.parse(row.updated_at)
+    });
   }
+  function toRow(item, userId) {
+    return {
+      id: item.id, user_id: userId, title: item.title, category: item.category,
+      author: item.author, price: item.price === "" ? null : item.price,
+      currency: item.currency, quantity: item.quantity, store: item.platform,
+      arrival_status: item.status, cover_url: item.cover, notes: item.notes,
+      created_at: new Date(item.createdAt).toISOString(),
+      updated_at: new Date(item.updatedAt).toISOString()
+    };
+  }
+  function requireCloud() {
+    if (!currentUserId || !cloudReady || busy) {
+      showToast(language === "zh" ? "請先登入並等待收藏載入完成。" : "Sign in and wait for your collection to load.");
+      return false;
+    }
+    return true;
+  }
+  async function loadCloud(userId, generation) {
+    try {
+      const allRows = [];
+      const pageSize = 500;
+      for (let start = 0; ; start += pageSize) {
+        const { data, error } = await client.from("collection_items")
+          .select("*").eq("user_id", userId)
+          .order("created_at", { ascending: false })
+          .order("id", { ascending: true })
+          .range(start, start + pageSize - 1);
+        if (error) throw error;
+        if (generation !== loadGeneration || currentUserId !== userId) return;
+        allRows.push(...data);
+        if (data.length < pageSize) break;
+      }
+      if (generation !== loadGeneration || currentUserId !== userId) return;
+      items = allRows.map(fromRow);
+      cloudReady = true;
+      render();
+    } catch (error) {
+      if (generation !== loadGeneration || currentUserId !== userId) return;
+      cloudReady = false;
+      items = [];
+      render();
+      console.error("Unable to load collection:", error);
+      showToast(language === "zh" ? "雲端收藏載入失敗，請重新整理後重試。" : "Could not load collection. Please refresh.");
+    }
+  }
+  function switchUser(userId) {
+    if (currentUserId === userId) return;
+    const generation = ++loadGeneration;
+    currentUserId = userId;
+    cloudReady = false;
+    busy = false;
+    items = [];
+    deleteTarget = null;
+    if (els.dialog.open) els.dialog.close();
+    if (els.confirm.open) els.confirm.close();
+    render();
+    if (userId) loadCloud(userId, generation);
+  }
+  client.auth.onAuthStateChange((event, session) => {
+    // Do not await Supabase queries inside the auth callback.
+    switchUser(session?.user?.id || null);
+  });
   function t(key) { return messages[language][key] || key; }
   function catName(key) { return categories[key] ? categories[key][language] : key; }
   function safeCover(value) {
@@ -139,6 +204,7 @@
     render();
   }
   function openEditor(item) {
+    if (!requireCloud()) return;
     els.form.reset(); $("formError").textContent = "";
     $("itemId").value = item ? item.id : "";
     $("dialogTitle").textContent = item ? t("editCollection") : t("addCollection");
@@ -155,8 +221,9 @@
     els.dialog.showModal();
     $("itemTitle").focus();
   }
-  function handleSave(event) {
+  async function handleSave(event) {
     event.preventDefault();
+    if (!requireCloud()) return;
     const title = $("itemTitle").value.trim();
     if (!title) { $("formError").textContent = t("required"); return; }
     const rawCover = $("itemCover").value.trim();
@@ -170,11 +237,37 @@
       quantity: $("itemQuantity").value, platform: $("itemPlatform").value.trim(), status: $("itemStatus").value,
       cover: rawCover, notes: $("itemNotes").value.trim(), createdAt: existing ? existing.createdAt : Date.now(), updatedAt: Date.now()
     });
-    if (existing) items = items.map(x => x.id === id ? item : x); else items.unshift(item);
-    if (saveItems()) { els.dialog.close(); render(); showToast(t("saved")); }
+    const userId = currentUserId;
+    const generation = loadGeneration;
+    busy = true;
+    const submit = els.form.querySelector('[type="submit"]');
+    if (submit) submit.disabled = true;
+    try {
+      const { data, error } = await client.from("collection_items")
+        .upsert(toRow(item, userId), { onConflict: "id" }).select().single();
+      if (error) throw error;
+      if (generation !== loadGeneration || currentUserId !== userId) return;
+      const saved = fromRow(data);
+      if (existing) items = items.map(x => x.id === saved.id ? saved : x);
+      else items.unshift(saved);
+      els.dialog.close();
+      render();
+      showToast(t("saved"));
+    } catch (error) {
+      console.error("Save failed:", error);
+      if (generation === loadGeneration) $("formError").textContent = error.message || "Save failed";
+    } finally {
+      if (generation === loadGeneration) busy = false;
+      if (submit) submit.disabled = false;
+    }
   }
-  function startDelete(id) { deleteTarget = id; els.confirm.showModal(); }
+  function startDelete(id) {
+    if (!requireCloud()) return;
+    deleteTarget = id;
+    els.confirm.showModal();
+  }
   function exportJson() {
+    if (!requireCloud()) return;
     if (!items.length) { showToast(t("exportEmpty")); return; }
     const blob = new Blob([JSON.stringify({format:"my-manga-collection",version:1,exportedAt:new Date().toISOString(),items},null,2)],{type:"application/json"});
     const url = URL.createObjectURL(blob); const a = document.createElement("a");
@@ -183,17 +276,39 @@
   }
   async function importJson(file) {
     if (!file) return;
+    if (!requireCloud()) { els.importFile.value = ""; return; }
     try {
       const parsed = JSON.parse(await file.text());
       const incoming = Array.isArray(parsed) ? parsed : parsed.items;
       if (!Array.isArray(incoming) || !incoming.every(isValidItem)) throw new Error("Invalid format");
       if (!confirm(t("confirmImport"))) return;
-      const merged = new Map(items.map(item => [item.id,item]));
-      incoming.forEach(raw => merged.set(String(raw.id),normalizeItem(raw)));
-      items = [...merged.values()];
-      if (saveItems()) { render(); showToast(t("importSuccess")); }
-    } catch (_) { showToast(t("importError")); }
-    finally { els.importFile.value = ""; }
+      const userId = currentUserId;
+      const generation = loadGeneration;
+      const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+      const rows = incoming.map(raw => {
+        const item = normalizeItem(raw);
+        if (!uuidPattern.test(item.id)) item.id = makeId();
+        return toRow(item, userId);
+      });
+      busy = true;
+      // Process batches; do not display success unless all batches succeed.
+      for (let i = 0; i < rows.length; i += 100) {
+        if (generation !== loadGeneration || currentUserId !== userId) return;
+        const { error } = await client.from("collection_items")
+          .upsert(rows.slice(i, i + 100), { onConflict: "id" });
+        if (error) throw error;
+      }
+      if (generation !== loadGeneration || currentUserId !== userId) return;
+      busy = false;
+      await loadCloud(userId, generation);
+      if (cloudReady) showToast(t("importSuccess"));
+    } catch (error) {
+      console.error("Import failed (some batches may have been saved):", error);
+      showToast(language === "zh" ? "匯入失敗或部分完成，請重新整理並檢查資料。" : "Import failed or partially completed. Refresh and check your data.");
+    } finally {
+      busy = false;
+      els.importFile.value = "";
+    }
   }
 
   $("addButton").addEventListener("click",() => openEditor(null));
@@ -204,9 +319,29 @@
   els.form.addEventListener("submit",handleSave);
   $("closeConfirm").addEventListener("click",() => els.confirm.close());
   $("keepItem").addEventListener("click",() => els.confirm.close());
-  $("confirmDelete").addEventListener("click",() => {
-    if (deleteTarget) { items = items.filter(x => x.id !== deleteTarget); saveItems(); render(); showToast(t("deleted")); }
-    deleteTarget = null; els.confirm.close();
+  $("confirmDelete").addEventListener("click", async () => {
+    if (!deleteTarget || !requireCloud()) return;
+    const id = deleteTarget;
+    const userId = currentUserId;
+    const generation = loadGeneration;
+    busy = true;
+    try {
+      const { data, error } = await client.from("collection_items")
+        .delete().eq("id", id).eq("user_id", userId).select("id");
+      if (error) throw error;
+      if (generation !== loadGeneration || currentUserId !== userId) return;
+      if (!data.length) throw new Error("Item was not deleted. Check permissions.");
+      items = items.filter(x => x.id !== id);
+      deleteTarget = null;
+      els.confirm.close();
+      render();
+      showToast(t("deleted"));
+    } catch (error) {
+      console.error("Delete failed:", error);
+      showToast(language === "zh" ? "刪除失敗，請重試。" : "Delete failed. Please retry.");
+    } finally {
+      if (generation === loadGeneration) busy = false;
+    }
   });
   els.grid.addEventListener("click",event => {
     const button = event.target.closest("button[data-action]"); if (!button) return;
@@ -233,4 +368,9 @@
   $("importNav").addEventListener("click",() => els.importFile.click());
   els.importFile.addEventListener("change",event => importJson(event.target.files[0]));
   setLanguage(language);
+  // Read the current session in case the initial auth event occurred before this script subscribed.
+  client.auth.getSession().then(({ data, error }) => {
+    if (error) console.warn("Session check:", error.message);
+    if (!currentUserId) switchUser(data?.session?.user?.id || null);
+  }).catch(error => console.error("Session check failed:", error));
 })();
