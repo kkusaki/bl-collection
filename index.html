@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fff1f6">
+  <title>My Manga Collection ♡</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="My Manga Collection home">
+        <span class="brand-icon">♡</span>
+        <span><strong>My Manga Collection</strong><small>Books · Comics · Merch · More</small></span>
+      </a>
+      <div class="top-actions">
+        <label class="search-wrap"><span>⌕</span><input id="globalSearch" type="search" placeholder="搜尋作品、作者、平台…"></label>
+        <button id="langToggle" class="soft-btn" type="button">繁中 / EN</button>
+        <button id="themeToggle" class="round-btn" type="button" aria-label="Toggle color theme">☼</button>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <button class="nav-item active" data-view="all"><span>⌂</span><b data-i18n="home">首頁</b></button>
+        <button class="nav-item" data-view="all"><span>♡</span><b data-i18n="collection">我的收藏</b></button>
+        <button class="nav-item" id="addNav"><span>＋</span><b data-i18n="addItem">新增作品</b></button>
+        <button class="nav-item" data-view="purchases"><span>▤</span><b data-i18n="purchaseRecords">購買記錄</b></button>
+        <button class="nav-item" data-view="stats"><span>▥</span><b data-i18n="statistics">統計總覽</b></button>
+        <div class="nav-divider"></div>
+        <button class="nav-item" id="exportNav"><span>⇧</span><b data-i18n="export">匯出 JSON</b></button>
+        <button class="nav-item" id="importNav"><span>⇩</span><b data-i18n="import">匯入 JSON</b></button>
+        <input id="importFile" type="file" accept=".json,application/json" hidden>
+        <div class="sidebar-note"><span>✿</span><p data-i18n="sidebarNote">一點一滴，收藏喜歡的故事。</p><div class="kitty">ฅ^•ﻌ•^ฅ</div></div>
+      </aside>
+
+      <main class="main-content">
+        <section class="welcome-card">
+          <div class="welcome-copy">
+            <p class="eyebrow" data-i18n="yourLibrary">YOUR LITTLE LIBRARY</p>
+            <h1><span data-i18n="hello">歡迎回來！</span> <span data-i18n="youHave">你有</span> <em id="totalCount">0</em> <span data-i18n="items">件收藏</span></h1>
+            <p data-i18n="welcomeLine">把喜歡的作品好好收藏，讓每一份心動都有跡可循 ♡</p>
+          </div>
+          <div class="welcome-art" aria-hidden="true"><span class="sparkle">✦</span><span class="book-stack">▱<br>▱<br>▱</span><span class="art-heart">♡</span></div>
+        </section>
+
+        <section class="stats-grid" aria-label="Collection statistics">
+          <article class="stat-card"><span class="stat-icon pink">▤</span><div><small data-i18n="physicalManga">日漫實體書</small><strong id="stat-jp">0</strong></div></article>
+          <article class="stat-card"><span class="stat-icon lilac">▥</span><div><small data-i18n="koreanManga">韓漫實體書</small><strong id="stat-kr">0</strong></div></article>
+          <article class="stat-card"><span class="stat-icon peach">✿</span><div><small data-i18n="merch">漫畫周邊</small><strong id="stat-merch">0</strong></div></article>
+          <article class="stat-card"><span class="stat-icon blue">▣</span><div><small data-i18n="digital">電子漫畫</small><strong id="stat-digital">0</strong></div></article>
+          <article class="stat-card"><span class="stat-icon rose">♡</span><div><small data-i18n="bonus">特典／小卡</small><strong id="stat-bonus">0</strong></div></article>
+        </section>
+
+        <section class="toolbar">
+          <div class="category-tabs" id="categoryTabs">
+            <button class="category-tab selected" data-category="all" data-i18n="all">全部</button>
+            <button class="category-tab" data-category="jp" data-i18n="physicalManga">日漫實體書</button>
+            <button class="category-tab" data-category="kr" data-i18n="koreanManga">韓漫實體書</button>
+            <button class="category-tab" data-category="merch" data-i18n="merch">漫畫周邊</button>
+            <button class="category-tab" data-category="digital" data-i18n="digital">電子漫畫</button>
+            <button class="category-tab" data-category="bonus" data-i18n="bonusFull">特典／小卡／收藏卡</button>
+          </div>
+          <button class="primary-btn" id="addButton"><span>＋</span> <span data-i18n="addItem">新增作品</span></button>
+        </section>
+
+        <section class="filter-row">
+          <label class="search-wrap local-search"><span>⌕</span><input id="localSearch" type="search" data-i18n-placeholder="searchPlaceholder" placeholder="搜尋作品名稱、作者…"></label>
+          <select id="statusFilter" aria-label="Arrival status">
+            <option value="all" data-i18n="allStatuses">全部到貨狀態</option>
+            <option value="received" data-i18n="received">已到貨</option>
+            <option value="pending" data-i18n="pending">未到貨</option>
+          </select>
+          <select id="sortFilter" aria-label="Sort collection">
+            <option value="newest" data-i18n="sortNewest">排序：最新加入</option>
+            <option value="oldest" data-i18n="sortOldest">排序：最早加入</option>
+            <option value="title" data-i18n="sortTitle">排序：作品名稱</option>
+            <option value="priceHigh" data-i18n="sortPriceHigh">排序：價格由高到低</option>
+            <option value="priceLow" data-i18n="sortPriceLow">排序：價格由低到高</option>
+          </select>
+        </section>
+
+        <section id="collectionGrid" class="collection-grid" aria-live="polite"></section>
+        <section id="emptyState" class="empty-state" hidden><div class="empty-illustration">♡</div><h2 data-i18n="emptyTitle">這裡還空空的</h2><p data-i18n="emptyText">新增第一件收藏，開始打造你的漫畫小宇宙吧！</p><button class="primary-btn" id="emptyAdd" data-i18n="addFirst">＋ 新增第一件收藏</button></section>
+        <footer class="main-footer"><span>Made with ♡ for your little library</span><span id="footerCount">0 items</span></footer>
+      </main>
+    </div>
+  </div>
+
+  <dialog id="itemDialog" class="modal">
+    <form id="itemForm" method="dialog">
+      <div class="modal-heading"><div><p class="eyebrow" data-i18n="littleDetails">LITTLE DETAILS</p><h2 id="dialogTitle" data-i18n="addCollection">新增收藏</h2></div><button type="button" class="close-btn" id="closeDialog" aria-label="Close">×</button></div>
+      <input type="hidden" id="itemId">
+      <div class="form-grid">
+        <label class="field full"><span data-i18n="titleLabel">作品名稱 *</span><input id="itemTitle" required maxlength="120" placeholder="例如：作品名稱"></label>
+        <label class="field"><span data-i18n="categoryLabel">收藏分類 *</span><select id="itemCategory" required><option value="jp">日漫實體書</option><option value="kr">韓漫實體書</option><option value="merch">漫畫周邊</option><option value="digital">電子漫畫</option><option value="bonus">特典／小卡／收藏卡</option></select></label>
+        <label class="field"><span data-i18n="authorLabel">作者</span><input id="itemAuthor" maxlength="120" placeholder="作者／創作者"></label>
+        <label class="field"><span data-i18n="priceLabel">購買價格</span><div class="price-input"><input id="itemPrice" type="number" min="0" step="0.01" placeholder="0.00"><select id="itemCurrency" aria-label="Currency"><option>USD</option><option>TWD</option><option>KRW</option><option>JPY</option><option>CNY</option><option>HKD</option></select></div></label>
+        <label class="field"><span data-i18n="quantityLabel">冊數／數量</span><input id="itemQuantity" type="number" min="1" step="1" value="1"></label>
+        <label class="field"><span data-i18n="platformLabel">購買平台／店鋪</span><input id="itemPlatform" maxlength="120" placeholder="例如：Amazon、Lezhin"></label>
+        <label class="field"><span data-i18n="arrivalLabel">到貨狀態</span><select id="itemStatus"><option value="received">已到貨</option><option value="pending">未到貨</option></select></label>
+        <label class="field full"><span data-i18n="coverLabel">封面圖片網址（可選）</span><input id="itemCover" type="url" placeholder="https://..."><small data-i18n="coverHint">可貼上圖片網址；也可以留空使用可愛預設封面。</small></label>
+        <label class="field full"><span data-i18n="notesLabel">備註（可選）</span><textarea id="itemNotes" rows="2" maxlength="500" placeholder="版本、特典內容、其他備註…"></textarea></label>
+      </div>
+      <p class="form-error" id="formError" role="alert"></p>
+      <div class="modal-actions"><button type="button" class="soft-btn" id="cancelDialog" data-i18n="cancel">取消</button><button type="submit" class="primary-btn" id="saveButton" data-i18n="saveItem">儲存收藏 ♡</button></div>
+    </form>
+  </dialog>
+  <dialog id="confirmDialog" class="modal confirm-modal">
+    <div class="modal-heading"><div><p class="eyebrow">ARE YOU SURE?</p><h2 data-i18n="deleteTitle">刪除這件收藏？</h2></div><button type="button" class="close-btn" id="closeConfirm">×</button></div>
+    <p data-i18n="deleteText">刪除後無法直接復原，建議先匯出 JSON 備份。</p>
+    <div class="modal-actions"><button class="soft-btn" id="keepItem" data-i18n="cancel">取消</button><button class="danger-btn" id="confirmDelete" data-i18n="delete">刪除</button></div>
+  </dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="script.js"></script>
+</body>
+</html>
