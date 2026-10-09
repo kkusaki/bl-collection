@@ -4,15 +4,13 @@
   const categories = {
     jp: { zh: "日漫實體書", en: "Japanese print manga" },
     kr: { zh: "韓漫實體書", en: "Korean print manhwa" },
-    merch: { zh: "漫畫周邊", en: "Merchandise" },
-    digital: { zh: "電子漫畫", en: "Digital comics" },
-    bonus: { zh: "特典／小卡／收藏卡", en: "Bonus / photocards" }
+    digital: { zh: "電子漫畫", en: "Digital comics" }
   };
   const messages = {
     zh: {
       home:"首頁",collection:"我的收藏",addItem:"新增作品",purchaseRecords:"購買記錄",statistics:"統計總覽",export:"匯出 JSON",import:"匯入 JSON",sidebarNote:"一點一滴，收藏喜歡的故事。",
       yourLibrary:"YOUR LITTLE LIBRARY",hello:"歡迎回來！",youHave:"你有",items:"件收藏",welcomeLine:"把喜歡的作品好好收藏，讓每一份心動都有跡可循 ♡",
-      physicalManga:"日漫實體書",koreanManga:"韓漫實體書",merch:"漫畫周邊",digital:"電子漫畫",bonus:"特典／小卡",bonusFull:"特典／小卡／收藏卡",all:"全部",
+      physicalManga:"日漫實體書",koreanManga:"韓漫實體書",digital:"電子漫畫",all:"全部",
       searchPlaceholder:"搜尋作品名稱、作者…",allStatuses:"全部到貨狀態",received:"已到貨",pending:"未到貨",sortNewest:"排序：最新加入",sortOldest:"排序：最早加入",sortTitle:"排序：作品名稱",sortPriceHigh:"排序：價格由高到低",sortPriceLow:"排序：價格由低到高",
       emptyTitle:"這裡還空空的",emptyText:"新增第一件收藏，開始打造你的漫畫小宇宙吧！",addFirst:"＋ 新增第一件收藏",littleDetails:"LITTLE DETAILS",addCollection:"新增收藏",editCollection:"編輯收藏",
       titleLabel:"作品名稱 *",categoryLabel:"收藏分類 *",authorLabel:"作者",priceLabel:"購買價格",quantityLabel:"冊數／數量",platformLabel:"購買平台／店鋪",arrivalLabel:"到貨狀態",coverLabel:"封面圖片網址（可選）",coverHint:"可貼上圖片網址；也可以留空使用可愛預設封面。",notesLabel:"備註（可選）",cancel:"取消",saveItem:"儲存收藏 ♡",
@@ -21,7 +19,7 @@
     en: {
       home:"Home",collection:"My Collection",addItem:"Add Item",purchaseRecords:"Purchase Records",statistics:"Statistics",export:"Export JSON",import:"Import JSON",sidebarNote:"Collect the stories you love, one by one.",
       yourLibrary:"YOUR LITTLE LIBRARY",hello:"Welcome back!",youHave:"You have",items:"items",welcomeLine:"Keep the stories you love close, one little treasure at a time ♡",
-      physicalManga:"Japanese Print",koreanManga:"Korean Print",merch:"Merchandise",digital:"Digital Comics",bonus:"Bonus / Cards",bonusFull:"Bonus / Photocards",all:"All",
+      physicalManga:"Japanese Print",koreanManga:"Korean Print",digital:"Digital Comics",all:"All",
       searchPlaceholder:"Search title, author…",allStatuses:"All arrival statuses",received:"Received",pending:"Pending",sortNewest:"Sort: Newest first",sortOldest:"Sort: Oldest first",sortTitle:"Sort: Title",sortPriceHigh:"Sort: Price: high to low",sortPriceLow:"Sort: Price: low to high",
       emptyTitle:"It's a little empty here",emptyText:"Add your first item and start building your manga universe!",addFirst:"＋ Add your first item",littleDetails:"LITTLE DETAILS",addCollection:"Add to collection",editCollection:"Edit collection item",
       titleLabel:"Title *",categoryLabel:"Category *",authorLabel:"Author",priceLabel:"Purchase price",quantityLabel:"Volumes / quantity",platformLabel:"Store / platform",arrivalLabel:"Arrival status",coverLabel:"Cover image URL (optional)",coverHint:"Paste an image URL, or leave blank for a cute default cover.",notesLabel:"Notes (optional)",cancel:"Cancel",saveItem:"Save item ♡",
@@ -124,7 +122,7 @@
     }
     els.total.textContent = items.length;
     els.footer.textContent = `${items.length} ${t("itemsFooter")}`;
-    const statMap = {jp:"stat-jp",kr:"stat-kr",merch:"stat-merch",digital:"stat-digital",bonus:"stat-bonus"};
+    const statMap = {jp:"stat-jp",kr:"stat-kr",digital:"stat-digital"};
     Object.entries(statMap).forEach(([cat,id]) => $(id).textContent = items.filter(x => x.category === cat).length);
     document.querySelectorAll(".category-tab").forEach(btn => btn.classList.toggle("selected",btn.dataset.category === currentCategory));
     document.querySelectorAll(".nav-item[data-view]").forEach(btn => btn.classList.toggle("active", btn.dataset.view === (currentCategory === "all" ? "all" : currentCategory)));
