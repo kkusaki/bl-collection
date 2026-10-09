@@ -8,20 +8,20 @@
   };
   const messages = {
     zh: {
-      home:"首頁",collection:"我的收藏",addItem:"新增作品",purchaseRecords:"購買記錄",statistics:"統計總覽",export:"匯出 JSON",import:"匯入 JSON",sidebarNote:"一點一滴，收藏喜歡的故事。",
-      yourLibrary:"YOUR LITTLE LIBRARY",hello:"歡迎回來！",youHave:"你有",items:"件收藏",welcomeLine:"把喜歡的作品好好收藏，讓每一份心動都有跡可循 ♡",
+      home:"首頁",collection:"我的收藏",addItem:"新增作品",purchaseRecords:"購買記錄",statistics:"統計總覽",export:"匯出 JSON",import:"匯入 JSON",sidebarNote:"快來看看又給男同孝了多少錢吧！",
+      yourLibrary:"YOUR LIBRARY",hello:"歡迎回來！",youHave:"你有",items:"件收藏",welcomeLine:"No Gays No Life ♡",
       physicalManga:"日漫實體書",koreanManga:"韓漫實體書",digital:"電子漫畫",all:"全部",
       searchPlaceholder:"搜尋作品名稱、作者…",allStatuses:"全部到貨狀態",received:"已到貨",pending:"未到貨",sortNewest:"排序：最新加入",sortOldest:"排序：最早加入",sortTitle:"排序：作品名稱",sortPriceHigh:"排序：價格由高到低",sortPriceLow:"排序：價格由低到高",
-      emptyTitle:"這裡還空空的",emptyText:"新增第一件收藏，開始打造你的漫畫小宇宙吧！",addFirst:"＋ 新增第一件收藏",littleDetails:"LITTLE DETAILS",addCollection:"新增收藏",editCollection:"編輯收藏",
+      emptyTitle:"這裡還空空的",emptyText:"新增第一件收藏，壯大男同宇宙吧！",addFirst:"＋ 新增第一件收藏",littleDetails:"LITTLE DETAILS",addCollection:"新增收藏",editCollection:"編輯收藏",
       titleLabel:"作品名稱 *",categoryLabel:"收藏分類 *",authorLabel:"作者",priceLabel:"購買價格",quantityLabel:"冊數／數量",platformLabel:"購買平台／店鋪",arrivalLabel:"到貨狀態",coverLabel:"封面圖片網址（可選）",coverHint:"可貼上圖片網址；也可以留空使用可愛預設封面。",notesLabel:"備註（可選）",cancel:"取消",saveItem:"儲存收藏 ♡",
       deleteTitle:"刪除這件收藏？",deleteText:"刪除後無法直接復原，建議先匯出 JSON 備份。",delete:"刪除",noResults:"沒有找到符合條件的收藏",noResultsText:"試試其他搜尋字詞或篩選條件。",saved:"收藏已儲存 ♡",deleted:"收藏已刪除",importSuccess:"JSON 匯入成功",importError:"匯入失敗：請確認這是有效的收藏 JSON 檔案。",exportSuccess:"JSON 備份已下載",exportEmpty:"目前沒有收藏資料可匯出。",required:"請填寫作品名稱。",invalidCover:"封面網址必須以 http:// 或 https:// 開頭。",confirmImport:"匯入資料會與現有收藏合併；同 ID 的作品會被更新。要繼續嗎？",itemsFooter:"件收藏",edit:"編輯",deleteAction:"刪除",quantity:"數量",unknownAuthor:"作者未填",noPlatform:"平台未填",notes:"備註",currency:"幣種"
     },
     en: {
       home:"Home",collection:"My Collection",addItem:"Add Item",purchaseRecords:"Purchase Records",statistics:"Statistics",export:"Export JSON",import:"Import JSON",sidebarNote:"Collect the stories you love, one by one.",
-      yourLibrary:"YOUR LITTLE LIBRARY",hello:"Welcome back!",youHave:"You have",items:"items",welcomeLine:"Keep the stories you love close, one little treasure at a time ♡",
+      yourLibrary:"YOUR LIBRARY",hello:"Welcome back!",youHave:"You have",items:"items",welcomeLine:"No Gays No Life ♡",
       physicalManga:"Japanese Print",koreanManga:"Korean Print",digital:"Digital Comics",all:"All",
       searchPlaceholder:"Search title, author…",allStatuses:"All arrival statuses",received:"Received",pending:"Pending",sortNewest:"Sort: Newest first",sortOldest:"Sort: Oldest first",sortTitle:"Sort: Title",sortPriceHigh:"Sort: Price: high to low",sortPriceLow:"Sort: Price: low to high",
-      emptyTitle:"It's a little empty here",emptyText:"Add your first item and start building your manga universe!",addFirst:"＋ Add your first item",littleDetails:"LITTLE DETAILS",addCollection:"Add to collection",editCollection:"Edit collection item",
+      emptyTitle:"It's a little empty here",emptyText:"Add your first item and start building your bl universe!",addFirst:"＋ Add your first item",littleDetails:"LITTLE DETAILS",addCollection:"Add to collection",editCollection:"Edit collection item",
       titleLabel:"Title *",categoryLabel:"Category *",authorLabel:"Author",priceLabel:"Purchase price",quantityLabel:"Volumes / quantity",platformLabel:"Store / platform",arrivalLabel:"Arrival status",coverLabel:"Cover image URL (optional)",coverHint:"Paste an image URL, or leave blank for a cute default cover.",notesLabel:"Notes (optional)",cancel:"Cancel",saveItem:"Save item ♡",
       deleteTitle:"Delete this item?",deleteText:"This can't be undone. Consider exporting a JSON backup first.",delete:"Delete",noResults:"No matching items found",noResultsText:"Try another search term or filter.",saved:"Item saved ♡",deleted:"Item deleted",importSuccess:"JSON imported successfully",importError:"Import failed: please check that this is a valid collection JSON file.",exportSuccess:"JSON backup downloaded",exportEmpty:"There are no items to export yet.",required:"Please enter a title.",invalidCover:"Cover URL must start with http:// or https://.",confirmImport:"Imported items will merge with your collection; matching IDs will be updated. Continue?",itemsFooter:"items",edit:"Edit",deleteAction:"Delete",quantity:"Qty",unknownAuthor:"No author added",noPlatform:"No platform added",notes:"Notes",currency:"Currency"
     }
