@@ -108,7 +108,13 @@
     <p data-i18n="deleteText">刪除後無法直接復原，建議先匯出 JSON 備份。</p>
     <div class="modal-actions"><button class="soft-btn" id="keepItem" data-i18n="cancel">取消</button><button class="danger-btn" id="confirmDelete" data-i18n="delete">刪除</button></div>
   </dialog>
+  
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <!-- Supabase JavaScript SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <!-- Supabase connection -->
+  <script src="supabase-config.js"></script>
+  <!-- Existing website -->
   <script src="script.js"></script>
 </body>
 </html>
